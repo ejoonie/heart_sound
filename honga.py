@@ -98,7 +98,8 @@ plt.xlabel('Time [s]')
 plt.ylim(0,200)
 
 plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.5, wspace=0.5)
-plt.show()
+# plt.show()
+plt.savefig('test.png')
 
 
 # In[ ]:
