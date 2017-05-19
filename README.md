@@ -1,4 +1,4 @@
-# heart_sound
+# Heart Sound
 Heart Sound Categorization with Tensorflow
 
 
