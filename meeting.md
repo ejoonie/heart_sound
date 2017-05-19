@@ -1,4 +1,7 @@
 # 2017.0519
 Meeting with agoodwarrior
 
-git installed 
+git installed
+https://trello.com/heartsound
+
+
