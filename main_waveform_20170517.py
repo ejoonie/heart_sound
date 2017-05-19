@@ -7,7 +7,7 @@ import numpy as np
 import scipy as sp
 
 # file to open
-path = 'F:\\30-Research Project\\10-Heart Beat Analysis\\data_ejoonie\\wavdata_abnormal_all'
+path = os.path.join('data_ejoonie', 'wavdata_abnormal_all')
 file = 'abnormal_woCHD_001.wav'
 
 # get time series for ch0 and plot
