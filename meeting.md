@@ -2,6 +2,6 @@
 Meeting with agoodwarrior
 
 git installed
-https://trello.com/heartsound
+https://trello.com/heartsound - agoodwari
 
 
