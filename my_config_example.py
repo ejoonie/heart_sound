@@ -1,0 +1,4 @@
+import os
+
+ROOT_DIR = 'PUT YOUR DIR PATH'
+FILE = 'PUT YOUR WAVE FILE'
