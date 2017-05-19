@@ -64,8 +64,8 @@ plt.grid()
 
 # get-filterred signal and plot
 from scipy.signal import butter, lfilter
-cutoff = 200
-N = 5 # filter oder
+cutoff = 500
+N = 4 # filter oder
 Wn = cutoff / (fs * 0.5)
 b, a = butter(N, Wn , btype = 'low', analog = False)
 y_filtered = lfilter(b, a, y_detrend) # low pass filter
