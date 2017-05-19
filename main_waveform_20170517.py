@@ -8,7 +8,7 @@ import scipy as sp
 
 # file to open
 path = os.path.join('data_ejoonie', 'wavdata_abnormal_all')
-file = 'abnormal_woCHD_001.wav'
+file = 'abnormal_woCHD_0012.wav'
 
 # get time series for ch0 and plot
 import wave
