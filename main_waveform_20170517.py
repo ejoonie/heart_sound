@@ -5,10 +5,10 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy as sp
+import my_config
 
-# file to open
-path = os.path.join('data_ejoonie', 'wavdata_abnormal_all')
-file = 'abnormal_woCHD_0012.wav'
+path = my_config.ROOT_DIR        # Please create your config file
+file = my_config.FILE            # Please create your config file
 
 # get time series for ch0 and plot
 import wave
