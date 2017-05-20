@@ -1,7 +1,7 @@
 # 2017.0519
 Meeting with agoodwarrior in Sunae
 
-git installed
+git referernce - https://gist.github.com/hofmannsven/6814451
 
 ## Prerequisite or Notation
 fft \
