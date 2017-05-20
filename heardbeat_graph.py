@@ -16,10 +16,12 @@ from scipy.signal import welch
 from scipy.signal import correlate
 from scipy.signal import detrend
 
+import my_config
+
 from scipy.signal import butter, lfilter, freqz
 
-DIR_A = './input/set_a/'
-OUTPUT_DIR_A = './output/set_a/'
+DIR_A = my_config.ROOT_DIR
+OUTPUT_DIR_A = './output/set_a'
 
 
 def draw_graph(input_file, output_file):
@@ -85,7 +87,7 @@ def draw_graph(input_file, output_file):
         plt.grid()
 
         # get auto correlation fuction
-        y_detrend = detrend(y)
+        y_detrend = detrend(y) # if detrended, avg == 0
         Ryy = correlate(y_detrend, y_detrend, mode='same')
 
         plt.subplot(num_fig, 1, 4)
@@ -212,6 +214,7 @@ if __name__ == '__main__':
                     channels[index % len(channels)].append(datum)
 
                 # Get time from indices
-                fs = wav_file.getframerate()
-                draw_low_path(channels[0], 6, 44100, 3.667)
+                # fs = wav_file.getframerate()
+                # draw_low_path(channels[0], 6, 44100, 40)
+                draw_graph(DIR_A, OUTPUT_DIR_A)
             break
