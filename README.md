@@ -15,3 +15,6 @@ https://trello.com/heartsound
 ## Paper
 
 TBA
+
+## Naming Convention
+https://www.python.org/dev/peps/pep-0008

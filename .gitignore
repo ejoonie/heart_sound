@@ -88,6 +88,11 @@ ENV/
 # Rope project settings
 .ropeproject
 
-#pycharm config dir
-.idea
+# pycharm config dir
+.idea/
+
+# data dir
+data_ejoonie/
+input/
+output/
 

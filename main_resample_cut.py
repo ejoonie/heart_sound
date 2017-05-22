@@ -5,8 +5,9 @@ import os
 path = '.'
 list_file = [file for file in os.listdir(path) if os.path.splitext(file)[1] == '.wav'] # only wav files
 
+
 # fuctions
-def PlotWave(file, path = '.'):
+def plot_wav(file, path ='.'):
     """
     Function to make plt.figure obj. from wav file
 
@@ -46,7 +47,8 @@ def PlotWave(file, path = '.'):
         #return
         return fig
 
-def GetTimeSeries(file, path = '.', channel = 0):
+
+def get_time_series(file, path ='.', channel = 0):
     """
     Function to return time series data from wav file
 
@@ -78,7 +80,8 @@ def GetTimeSeries(file, path = '.', channel = 0):
         # return
         return Time, channels[channel]
 
-def MakeDownSampleWav(file_old, file_new, fs_new, path_old = '.', path_new = '.'):
+
+def make_down_sample_wav(file_old, file_new, fs_new, path_old ='.', path_new ='.'):
     """
     Function to make down-sampled wav file
 
@@ -123,7 +126,7 @@ def MakeDownSampleWav(file_old, file_new, fs_new, path_old = '.', path_new = '.'
             wav_new.writeframes(signal_new.copy(order='C'))
 
 
-def MakeCutWav(file_old, file_new, t_start, t_end, path_old = '.', path_new = '.'):
+def make_cut_wav(file_old, file_new, t_start, t_end, path_old ='.', path_new ='.'):
     """
     Function to make cut wav file
     Args:
@@ -177,18 +180,18 @@ if __name__ == '__main__':
     for file in list_file:
         # file_old
         print('Old File : {}'.format(file))
-        fig = PlotWave(file)
+        fig = plot_wav(file)
 
         # file_new
         file_new = os.path.splitext(file)[0] + '_resample' + '.wav'
         print('New File : {}'.format(file_new))
-        MakeDownSampleWav(file_old = file, file_new = file_new, fs_new = 4000)
-        fig = PlotWave(file_new)
+        make_down_sample_wav(file_old = file, file_new = file_new, fs_new = 4000)
+        fig = plot_wav(file_new)
 
         # cut file_new
         file_new_cut = os.path.splitext(file_new)[0] + '_cut' + '.wav'
-        MakeCutWav(file_old = file_new, file_new = file_new_cut, t_start = 0, t_end = 2)
-        fig = PlotWave(file_new_cut)
+        make_cut_wav(file_old = file_new, file_new = file_new_cut, t_start = 0, t_end = 2)
+        fig = plot_wav(file_new_cut)
 
     plt.show()
         

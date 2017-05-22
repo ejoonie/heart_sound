@@ -12,7 +12,9 @@ file = my_config.FILE            # Please create your config file
 
 # get time series for ch0 and plot
 import wave
-def TimeSeries(file, i_ch = 0):
+
+
+def time_series(file, i_ch = 0):
     with wave.open(file,'r') as wav_file:
         # Extract Raw Audio from Wav File
         signal = wav_file.readframes(-1)
@@ -30,7 +32,8 @@ def TimeSeries(file, i_ch = 0):
         # return
         return fs, Time, channels[i_ch]
 
-fs, t, y = TimeSeries(os.path.join(path, file), i_ch = 0)
+
+fs, t, y = time_series(os.path.join(path, file), i_ch = 0)
 
 plt.figure(1)
 plt.plot(t, y)
