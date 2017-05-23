@@ -1,12 +1,6 @@
 # coding=utf-8
 
-# Get list data
-import os
-path = '.'
-list_file = [file for file in os.listdir(path) if os.path.splitext(file)[1] == '.wav'] # only wav files
 
-
-# fuctions
 def plot_wav(file, path ='.'):
     """
     Function to make plt.figure obj. from wav file
@@ -48,13 +42,13 @@ def plot_wav(file, path ='.'):
         return fig
 
 
-def get_time_series(file, path ='.', channel = 0):
+def get_time_series(file_name, file_dir='.', channel=0):
     """
     Function to return time series data from wav file
 
     Args:
-        file (str) : wav file name
-        path (str) : path where the wav file exists
+        file_name (str) : wav file name
+        file_dir (str) : path where the wav file exists
         channel (int) : index of channel of wav - 0 or 1 for stereo
 
     Returns:
@@ -63,25 +57,25 @@ def get_time_series(file, path ='.', channel = 0):
     
     import os
     import wave
-    with wave.open(os.path.join(path, file),'r') as wav_file:
-        #Extract Raw Audio from Wav File
+    with wave.open(os.path.join(file_dir, file_name), 'r') as wav_file:
+        # Extract Raw Audio from Wav File
         signal = wav_file.readframes(-1)
-        signal = np.fromstring(signal, 'Int16')
+        signal = np.fromstring(signal, 'Int16') # Int16? or Int8?
 
-        #Split the data into channels 
+        # Split the data into channels
         channels = [[] for channel in range(wav_file.getnchannels())]
         for index, datum in enumerate(signal):
             channels[index%len(channels)].append(datum)
 
-        #Get time from indices
+        # Get time from indices
         fs = wav_file.getframerate()
-        Time = np.linspace(0, len(signal)/len(channels)/fs, num=len(signal)/len(channels))
+        time = np.linspace(0, len(signal)/len(channels)/fs, num=len(signal)/len(channels))
 
         # return
-        return Time, channels[channel]
+        return time, channels[channel]
 
 
-def make_down_sample_wav(file_old, file_new, fs_new, path_old ='.', path_new ='.'):
+def make_down_sample_wav(file_old, file_new, fs_new, path_old='.', path_new='.'):
     """
     Function to make down-sampled wav file
 
@@ -126,7 +120,7 @@ def make_down_sample_wav(file_old, file_new, fs_new, path_old ='.', path_new ='.
             wav_new.writeframes(signal_new.copy(order='C'))
 
 
-def make_cut_wav(file_old, file_new, t_start, t_end, path_old ='.', path_new ='.'):
+def make_cut_wav(file_old, file_new, t_start, t_end, path_old='.', path_new='.'):
     """
     Function to make cut wav file
     Args:
@@ -177,21 +171,37 @@ def make_cut_wav(file_old, file_new, t_start, t_end, path_old ='.', path_new ='.
 if __name__ == '__main__':
     import numpy as np
     import matplotlib.pyplot as plt
-    for file in list_file:
-        # file_old
-        print('Old File : {}'.format(file))
-        fig = plot_wav(file)
+    from heardbeat_graph import draw_graph
+    # Get list data
+    import os
+    input_dir = os.path.join('.', 'input', 'set_a')
+    file_list = [file for file in os.listdir(input_dir) if os.path.splitext(file)[1] == '.wav']  # only wav files
 
-        # file_new
-        file_new = os.path.splitext(file)[0] + '_resample' + '.wav'
-        print('New File : {}'.format(file_new))
-        make_down_sample_wav(file_old = file, file_new = file_new, fs_new = 4000)
-        fig = plot_wav(file_new)
+    output_dir = os.path.join('.', 'output', 'set_a')
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    for file_original in file_list:
+        # file_original
+        print('Old File : {}'.format(file_original))
+        image_original = os.path.join(output_dir, file_original + '.png')
+        draw_graph(os.path.join(input_dir, file_original), image_original)
+        # fig = plot_wav(os.path.join(input_dir, file_original))
+
+        # file_new - resampled
+        file_resampled = os.path.splitext(file_original)[0] + '_resample' + '.wav'
+        print('New File : {}'.format(file_resampled))
+        make_down_sample_wav(file_old=file_original, file_new=file_resampled, fs_new=4000, path_old=input_dir, path_new=output_dir)
+        image_resampled = os.path.join(output_dir, file_resampled + '.png')
+        draw_graph(os.path.join(output_dir, file_resampled), image_resampled)
+        # fig = plot_wav(file_resampled)
 
         # cut file_new
-        file_new_cut = os.path.splitext(file_new)[0] + '_cut' + '.wav'
-        make_cut_wav(file_old = file_new, file_new = file_new_cut, t_start = 0, t_end = 2)
-        fig = plot_wav(file_new_cut)
+        file_cut = os.path.splitext(file_resampled)[0] + '_cut' + '.wav'
+        make_cut_wav(file_old=file_resampled, file_new=file_cut, t_start=0, t_end=2, path_old=output_dir, path_new=output_dir)
+        image_cut = os.path.join(output_dir, file_cut + '.png')
+        draw_graph(os.path.join(output_dir, file_cut), image_cut)
+        # fig = plot_wav(file_cut)
 
     plt.show()
         

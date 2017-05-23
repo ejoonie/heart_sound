@@ -58,7 +58,7 @@ def draw_graph(input_file, output_file):
 
         plt.subplot(num_fig, 1, 1)
         plt.plot(x, y)
-        plt.title(filename + '\nSignal...')
+        plt.title(input_file + '\nSignal...')
         plt.xlabel('Time [s]')
         plt.ylabel('Signal')
         plt.grid()
