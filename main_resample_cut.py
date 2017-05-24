@@ -1,10 +1,5 @@
 # coding=utf-8
 
-# Get list data
-import os
-path = '.'
-list_file = [file for file in os.listdir(path) if os.path.splitext(file)[1] == '.wav'] # only wav files
-
 # fuctions
 def PlotWave(file, path = '.'):
     """
@@ -110,7 +105,7 @@ def MakeDownSampleWav(file_old, file_new, fs_new, path_old = '.', path_new = '.'
         with wave.open(os.path.join(path_new, file_new), 'w') as wav_new:
             # info. of new wav
             wav_new.setframerate(fs_new)
-            wav_new.setnchannels(wav_old.getnchannels())
+            wav_new.setnchannels(n_channel_old)
             wav_new.setsampwidth(samplewidth_old)
             wav_new.setnframes(1)
             n_sample_new = round(len(signal_old) * fs_new / fs_old)
@@ -154,14 +149,14 @@ def MakeCutWav(file_old, file_new, t_start, t_end, path_old = '.', path_new = '.
         with wave.open(os.path.join(path_new, file_new), 'w') as wav_new:
             # new wav file
             wav_new.setframerate(fs_old)
-            wav_new.setnchannels(wav_old.getnchannels())
+            wav_new.setnchannels(n_channel_old)
             wav_new.setsampwidth(samplewidth_old)
             wav_new.setnframes(1)
             
             # start/end index & length
             fs_ms = fs_old / 1000 # frame per ms
-            t_start_ms = t_start * 1000 # unit : ms
-            t_end_ms = t_end * 1000 # unit : ms
+            t_start_ms = int(t_start * 1000) # unit : ms
+            t_end_ms = int(t_end * 1000) # unit : ms
             length = int((t_end_ms - t_start_ms) * fs_ms)
 
             # write new wav
@@ -170,29 +165,59 @@ def MakeCutWav(file_old, file_new, t_start, t_end, path_old = '.', path_new = '.
             wav_old.setpos(anchor + t_start_ms)
             wav_new.writeframes(wav_old.readframes(length))
             
+
+def GetDuration(file, path ='.'):
+    """
+    Function to make down-sampled wav file
+
+    Args:
+        file (str) : wav file name to read
+        path (str) : path where the wav file to read exists
+
+    Returns:
+        (float) : time length of wav file [sec]
+    """
+    import os
+    import wave
+
+    with wave.open(os.path.join(path, file), 'r') as wav:
+        frames = wav.getnframes()
+        fs = wav.getframerate()
+        duration = frames / float(fs)
+        return duration
+
 # iteration
 if __name__ == '__main__':
+    """Making split wav files"""
+
+    # import module
+    import os
     import numpy as np
     import matplotlib.pyplot as plt
-    for file in list_file:
+    import my_config
+
+    DIR = my_config.ROOT_DIR
+
+    # Get list wav file
+    list_file = [file for file in os.listdir(DIR) if os.path.splitext(file)[1] == '.wav']  # only wav files
+
+    # Iteration to resampled and cut data
+    for i, file in enumerate(list_file):
         # file_old
         print('Old File : {}'.format(file))
-        fig = PlotWave(file)
 
-        # file_new
-        file_new = os.path.splitext(file)[0] + '_resample' + '.wav'
-        print('New File : {}'.format(file_new))
-        MakeDownSampleWav(file_old = file, file_new = file_new, fs_new = 4000)
-        fig = PlotWave(file_new)
+        # make resampled file
+        file_new = 'resample_' + str(i) +'.wav'
+        print(' ... Resampled File : {}'.format(file_new))
+        MakeDownSampleWav(file_old = file, file_new = file_new, fs_new = 4000, path_old = DIR, path_new = DIR)
 
-        # cut file_new
-        file_new_cut = os.path.splitext(file_new)[0] + '_cut' + '.wav'
-        MakeCutWav(file_old = file_new, file_new = file_new_cut, t_start = 0, t_end = 2)
-        fig = PlotWave(file_new_cut)
-
-    plt.show()
-        
-
-
-
-
+        # split wav file by t_cut
+        duration = GetDuration(file, DIR)
+        t_cut = 2.5  # cut time duration = 2.5 sec
+        n_seg = int(duration / t_cut)
+        for j in range(n_seg):
+            t_start = j * t_cut
+            t_end = t_start + t_cut
+            file_new_cut = 'keggle_resample_cut_' + str(i) + '_' + str(j) + '.wav'
+            MakeCutWav(file_old = file_new, file_new = file_new_cut, t_start = t_start, t_end = t_end, path_old = DIR, path_new = DIR)
+            print(' ... ... Resampled and Cut File : {}'.format(file_new_cut))
